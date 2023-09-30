@@ -1,0 +1,100 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_I2C_ADDRESS 0x3C  // Default I2C address for the OLED display
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_I2C_ADDRESS); // Use the default Wire object
+
+#define MAX_LINES 6
+String textBuffer[MAX_LINES];
+int currentLine = 0;
+bool clearRequested = false;
+
+void setup() {
+  // Initialize the OLED display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_I2C_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for (;;);
+  }
+
+  // Clear the display buffer and set text size and color
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  // Print initial message
+  display.setCursor(0, 0);
+  display.println("Text from Serial Monitor:");
+
+  // Start serial communication
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read text from Serial Monitor and display it on the OLED
+  while (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    if (command == "/clear") {
+      clearRequested = true;
+    } else if (command == "/up") {
+      scrollUp();
+    } else if (command == "/down") {
+      scrollDown();
+    } else {
+      // Add text to the buffer and display it
+      addTextToBuffer(command);
+      displayTextBuffer();
+    }
+  }
+
+  // Check if a clear request was made and clear the display
+  if (clearRequested) {
+    clearDisplay();
+    clearRequested = false; // Reset the clear request
+  }
+}
+
+void clearDisplay() {
+  display.clearDisplay();
+  display.display();
+  for (int i = 0; i < MAX_LINES; i++) {
+    textBuffer[i] = ""; // Clear the text buffer
+  }
+  currentLine = 0;
+}
+
+void scrollUp() {
+  if (currentLine > 0) {
+    currentLine--;
+    displayTextBuffer();
+  }
+}
+
+void scrollDown() {
+  if (currentLine < MAX_LINES - 1 && textBuffer[currentLine + 1] != "") {
+    currentLine++;
+    displayTextBuffer();
+  }
+}
+
+void addTextToBuffer(String text) {
+  textBuffer[currentLine] = text;
+  currentLine = (currentLine + 1) % MAX_LINES;
+}
+
+void displayTextBuffer() {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+
+  for (int i = currentLine, j = 0; j < MAX_LINES; j++) {
+    if (textBuffer[i] != "") {
+      display.println(textBuffer[i]);
+    }
+    i = (i + 1) % MAX_LINES;
+  }
+
+  display.display();
+}
