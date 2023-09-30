@@ -13,8 +13,6 @@
 # :notebook_with_decorative_cover: Table of Contents
 
 - [About the Project](#star2-about-the-project)
-- [Contributing](#wave-contributing)
-- [License](#warning-license)
 - [Contact](#handshake-contact)
 
 
@@ -32,18 +30,6 @@
 | Secondary Color | ![#b4e2d6](https://via.placeholder.com/10/b4e2d6?text=+) #b4e2d6 |
 | Accent Color | ![#00ADB5](https://via.placeholder.com/10/00ADB5?text=+) #00ADB5 |
 | Text Color | ![#EEEEEE](https://via.placeholder.com/10/EEEEEE?text=+) #EEEEEE |
-
-## :wave: Contributing
-
-<a href="https://github.com/DoelmmWoel/arduinoprojects.git/graphs/contributors"> <img src="https://contrib.rocks/image?repo=Louis3797/awesome-readme-template" /> </a>
-
-Contributions are always welcome!
-
-see `contributing.md` for ways to get started
-
-## :warning: License
-
-Distributed under the no License. See LICENSE.txt for more information.
 
 ## :handshake: Contact
 
